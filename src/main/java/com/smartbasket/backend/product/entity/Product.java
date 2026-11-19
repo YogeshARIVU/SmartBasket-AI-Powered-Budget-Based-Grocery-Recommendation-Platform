@@ -3,6 +3,7 @@ package com.smartbasket.backend.product.entity;
 
 import com.smartbasket.backend.category.entity.Category;
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -25,6 +26,13 @@ public class Product {
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
+
+    @Column(name = "unit_quantity", nullable = false, precision = 10, scale = 3)
+    private BigDecimal unitQuantity;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "unit", nullable = false, length = 20)
+    private ProductUnit unit;
 
     @Column(nullable = false)
     private Boolean active = true;
@@ -89,6 +97,22 @@ public class Product {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public BigDecimal getUnitQuantity() {
+        return unitQuantity;
+    }
+
+    public void setUnitQuantity(BigDecimal unitQuantity) {
+        this.unitQuantity = unitQuantity;
+    }
+
+    public ProductUnit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(ProductUnit unit) {
+        this.unit = unit;
     }
 
     public Boolean getActive() {
