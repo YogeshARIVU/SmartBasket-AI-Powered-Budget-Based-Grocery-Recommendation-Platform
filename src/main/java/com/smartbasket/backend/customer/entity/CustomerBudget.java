@@ -2,7 +2,6 @@
 package com.smartbasket.backend.customer.entity;
 
 import com.smartbasket.backend.shop.entity.Shop;
-
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -17,8 +16,8 @@ import java.time.LocalDateTime;
                         columnNames = {
                                 "customer_id",
                                 "shop_id",
-                                "month",
-                                "year"
+                                "budget_month",
+                                "budget_year"
                         }
                 )
         }
@@ -43,10 +42,10 @@ public class CustomerBudget {
     @Column(name = "spent_amount", nullable = false, precision = 12, scale = 2)
     private BigDecimal spentAmount = BigDecimal.ZERO;
 
-    @Column(nullable = false)
+    @Column(name = "budget_month", nullable = false)
     private Integer month;
 
-    @Column(nullable = false)
+    @Column(name = "budget_year", nullable = false)
     private Integer year;
 
     @Column(nullable = false, updatable = false)
