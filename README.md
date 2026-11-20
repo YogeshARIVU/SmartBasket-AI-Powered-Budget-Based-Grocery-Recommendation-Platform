@@ -1,26 +1,30 @@
 # 🛒 SmartBasket
-### AI-Powered, QR-Based Budget Grocery Recommendation Platform
+### Smart Grocery Budgeting & Recommendation Platform
 
-SmartBasket is a smart grocery budgeting platform designed to help customers plan essential grocery purchases within a monthly budget.
+SmartBasket is a QR-based grocery budgeting platform built with Java and Spring Boot. It helps customers plan grocery purchases within a monthly budget by generating product recommendations based on shop inventory, product prices, and previous purchase history.
 
-Customers can scan a shop's QR code, enter their monthly budget, and receive grocery recommendations based on product prices and shop inventory.
+Customers can select a shop, set a monthly budget, receive grocery recommendations, manage shopping lists, track purchases, and monitor their spending through analytics and reports.
 
 ---
 
 ## 🎯 Project Objectives
 
-- Help customers manage grocery expenses within a fixed budget.
-- Recommend essential grocery products.
-- Track shop-specific product availability.
-- Calculate estimated shopping costs and remaining budgets.
-- Simplify grocery planning through a QR-based experience.
+- Help customers manage grocery expenses within a fixed monthly budget.
+- Generate budget-aware grocery recommendations.
+- Track shop-specific product availability and stock levels.
+- Simplify grocery planning through shopping lists.
+- Maintain purchase history and track completed purchases.
+- Monitor monthly spending and category-wise expenses.
+- Provide spending reports and monthly comparisons.
+
+---
 
 ## 🛠️ Technology Stack
 
 | Category | Technologies |
 |---|---|
 | Language | Java 21 |
-| Backend | Spring Boot 4 |
+| Backend Framework | Spring Boot 4 |
 | Data Access | Spring Data JPA, Hibernate |
 | API | REST APIs |
 | Build Tool | Maven |
@@ -34,27 +38,27 @@ Customers can scan a shop's QR code, enter their monthly budget, and receive gro
 ## ✅ Implemented Features
 
 ### 1. Category Management
-- Create, retrieve, update, and delete categories.
+- Create, retrieve, update, and delete product categories.
 - Validate category details.
-- Manage product categories.
+- Organize products by category.
 
 ### 2. Product Management
 - Complete Product CRUD operations.
 - Associate products with categories.
 - Validate product details and SKU uniqueness.
-- Product listing with pagination.
+- Paginated product listing.
 - Search products by name.
 - Filter and sort products.
 
 ### 3. Shop Management
-- Manage shop information.
+- Create and manage shop information.
 - Maintain individual shop details.
 - Associate inventory with specific shops.
 
 ### 4. Customer Management
 - Create and manage customer details.
-- Customer information validation.
-- Customer lookup operations.
+- Validate customer information.
+- Retrieve customer records.
 
 ### 5. Monthly Budget Management
 - Create monthly budgets for customers.
@@ -68,20 +72,53 @@ Customers can scan a shop's QR code, enter their monthly budget, and receive gro
 - Track available product quantities.
 - Configure minimum stock levels.
 - Identify low-stock products.
-- Support stock updates using stock movement types.
+- Record stock movements.
+- Support inventory updates through stock movement types.
 
 ### 7. Grocery Recommendation System
 - Generate recommendations based on customer budgets.
 - Consider shop-specific product availability.
 - Recommend active products with available stock.
-- Calculate estimated grocery costs.
-- Calculate remaining budget after recommendations.
+- Use previous purchase history to prioritize familiar products.
+- Apply balanced product allocation within the available budget.
+- Respect inventory stock limits.
+- Calculate estimated grocery costs and remaining budget.
 
-**Note:** The current recommendation engine uses basic rule-based logic. AI/ML-based recommendations are planned for future development.
+**Note:** The current recommendation engine uses rule-based logic. AI/ML-based personalization is a future enhancement.
+
+### 8. Shopping List Management
+- Create shopping lists for customers and shops.
+- Add grocery products to shopping lists.
+- Update shopping list items and quantities.
+- Remove products from shopping lists.
+- Track pending and purchased items.
+- Manage purchase status.
+
+### 9. Purchase History Management
+- Record completed grocery purchases.
+- Retrieve customer purchase history.
+- Track purchased products and quantities.
+- Maintain purchase timestamps.
+- Integrate completed purchases with inventory updates.
+
+### 10. Spending Analytics
+- Generate monthly spending summaries.
+- Calculate total spending.
+- Analyze category-wise spending.
+- Track grocery expenses across categories.
+- Retrieve spending information for customers.
+
+### 11. Spending Reports
+- Generate monthly spending reports.
+- Compare spending across months.
+- Retrieve spending trends.
+- Analyze monthly expense patterns.
 
 ---
 
 ## 🏗️ Backend Architecture
+
+The application follows a feature-based modular monolith architecture.
 
 ```text
 src/main/java/com/smartbasket/backend/
@@ -94,25 +131,26 @@ src/main/java/com/smartbasket/backend/
 │   └── service/
 │
 ├── product/
-│   ├── controller/
-│   ├── dto/
-│   ├── entity/
-│   ├── repository/
-│   └── service/
-│
 ├── shop/
-│
 ├── customer/
-│
 ├── inventory/
-│
 ├── recommendation/
+├── shoppinglist/
+├── categoryanalytics/
+├── monthlyspending/
+├── spendingreports/
 │
 └── common/
     └── exception/
 ```
 
-The project follows a feature-based modular monolith architecture using Spring Boot.
+Each feature is organized into layers:
+
+- **Controller:** Handles HTTP requests and responses.
+- **Service:** Contains business logic.
+- **Repository:** Handles database operations.
+- **Entity:** Represents database tables.
+- **DTO:** Transfers data between API layers.
 
 ---
 
@@ -124,41 +162,42 @@ The project follows a feature-based modular monolith architecture using Spring B
 - Maven
 - Git
 
-### Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/YogeshARIVU/SmartBasket-AI-Powered-Budget-Based-Grocery-Recommendation-Platform.git
 ```
 
-### Navigate to the Project
+### 2. Navigate to the Project
 
 ```bash
 cd SmartBasket-AI-Powered-Budget-Based-Grocery-Recommendation-Platform
 ```
 
-### Build and Test
+### 3. Build and Test
 
 ```bash
 mvn clean test
 ```
 
-### Run the Application
+### 4. Run the Application
 
 ```bash
 mvn spring-boot:run
 ```
 
-The application currently runs on:
+### 5. Access the Application
 
 ```text
-http://localhost:8081
+Base URL: http://localhost:8081
+H2 Console: http://localhost:8081/h2-console
 ```
+
+The H2 database is currently configured for development and testing.
 
 ---
 
-## 🔌 Recommendation API
-
-Generate grocery recommendations for a customer and shop.
+## 🔌 Sample API – Grocery Recommendations
 
 **Endpoint**
 
@@ -175,25 +214,49 @@ POST /api/recommendations
 }
 ```
 
-The recommendation API requires a monthly budget record for the current month and year, along with available inventory for the selected shop.
+The recommendation API:
+
+1. Retrieves the customer's current monthly budget.
+2. Calculates the available budget.
+3. Retrieves the selected shop's inventory.
+4. Considers previous purchase history.
+5. Allocates product quantities within budget and stock limits.
+6. Returns estimated costs and remaining budget.
+
+A valid monthly budget and available shop inventory must exist before generating recommendations.
+
+---
+
+## 📊 Project Modules
+
+| Module | Status |
+|---|---|
+| Category Management | Implemented |
+| Product Management | Implemented |
+| Shop Management | Implemented |
+| Customer Management | Implemented |
+| Monthly Budget Management | Implemented |
+| Inventory Management | Implemented |
+| Grocery Recommendations | Implemented |
+| Shopping List Management | Implemented |
+| Purchase History | Implemented |
+| Monthly Spending Analytics | Implemented |
+| Category-wise Spending Analytics | Implemented |
+| Spending Reports | Implemented |
 
 ---
 
 ## 🔮 Future Enhancements
 
-- [ ] Shopping List Management
-- [ ] Add, update, and remove shopping list products
-- [ ] Track purchased and pending grocery items
-- [ ] Improved grocery recommendation algorithms
-- [ ] AI/ML-based personalized recommendations
-- [ ] QR Code Generation and Scanning
-- [ ] Purchase History and Expense Tracking
-- [ ] JWT Authentication and Authorization
-- [ ] Role-Based Access Control
-- [ ] PostgreSQL Database Integration
-- [ ] React.js Frontend Application
-- [ ] Docker Containerization
-- [ ] Cloud Deployment
+- [ ] AI/ML-based personalized grocery recommendations.
+- [ ] Nutrition-aware grocery recommendations.
+- [ ] QR Code Generation and Scanning.
+- [ ] JWT Authentication and Authorization.
+- [ ] Role-Based Access Control.
+- [ ] PostgreSQL Database Integration.
+- [ ] React.js Frontend Application.
+- [ ] Docker Containerization.
+- [ ] Cloud Deployment.
 
 ---
 
@@ -201,7 +264,9 @@ The recommendation API requires a monthly budget record for the current month an
 
 **Backend Development – In Progress**
 
-Implemented modules: Category, Product, Shop, Customer, Monthly Budget, Inventory, and initial Grocery Recommendations.
+Core backend modules for product management, inventory, budgeting, recommendations, shopping lists, purchase history, and spending analytics have been implemented.
+
+Further development will focus on realistic test data, end-to-end integration testing, frontend development, and future enhancements.
 
 ---
 
@@ -216,4 +281,4 @@ Implemented modules: Category, Product, Shop, Customer, Monthly Budget, Inventor
 
 ⭐ If you find this project interesting, consider giving it a star!
 
-*Built with Java, Spring Boot, and a vision for smarter grocery shopping.*
+*Built with Java 21, Spring Boot, and a vision for smarter grocery shopping.*
